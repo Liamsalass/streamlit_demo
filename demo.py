@@ -10,15 +10,9 @@ from lightrag.utils import EmbeddingFunc
 import textract 
 
 # rag_db_exists = True
-# if os.path.exists("uploads"):
-#         for filename in os.listdir("uploads"):
-#             file_path = os.path.join("uploads", filename)
-#             if os.path.isfile(file_path):
-#                 os.remove(file_path)
-#             elif os.path.isdir(file_path):
-#                 os.rmdir(file_path)
-# else:
-#     os.mkdir("uploads")
+
+if not os.path.exists("uploads"):
+    os.makedirs("uploads")
 
 
 rag = LightRAG(
