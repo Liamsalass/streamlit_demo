@@ -311,7 +311,8 @@ class StreamlitDemo:
                                 else:
                                     f.write(line)
                     st.success("Files processed successfully.")
-        
+
+                
         # Display the list of all uploaded files with their status
         uploaded_files_path = os.path.join(self.upload_path, "uploaded_files.txt")
         if os.path.exists(uploaded_files_path):
@@ -338,25 +339,13 @@ class StreamlitDemo:
                 st.write(f"{name} - {status}")
                 file_selection.append(name)
             
-            # Allow user to select files to remove
-            file_to_remove = st.multiselect("Select files to remove from the database:", file_selection)
-            
-            if st.button("Remove Selected Files"):
-                with st.spinner("Removing selected files..."):
-                    for file_name in file_to_remove:
-                        st.write(f"Removing {file_name}...")
-                        # Delete the file from the RAG
-                        rag.delete_by_entity(file_name)
-                        
-                        # Update uploaded_files.txt
-                        with open(uploaded_files_path, "r", encoding="utf-8") as f:
-                            lines = f.readlines()
-                        with open(uploaded_files_path, "w", encoding="utf-8") as f:
-                            for line in lines:
-                                if not line.startswith(file_name):
-                                    f.write(line)
-                    
-                    st.success("Selected files removed successfully.")
+            # Allow user to delete all files
+            if st.button("Delete All Files"):
+                for file_name in os.listdir(self.upload_path):
+                    os.remove(os.path.join(self.upload_path, file_name))
+                os.rmdir(self.upload_path)
+                os.mkdir(self.upload_path)
+                st.success("All files deleted. Refresh the page to upload new files.")
         else:
             st.write("No files uploaded yet.")
 
