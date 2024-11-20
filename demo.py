@@ -262,8 +262,7 @@ class StreamlitDemo:
 
         # Update chat history with the complete assistant message
         st.session_state.chat_history.append({'role': 'assistant', 'content': assistant_message})
-
-
+    
     def file_upload_page(self):
         st.title("File Upload")
         st.write("Upload a .txt file to generate embeddings.")
@@ -333,14 +332,36 @@ class StreamlitDemo:
                 f.writelines(deduplicated_files)
             
             st.write("All uploaded files:")
+            file_selection = []
             for line in deduplicated_files:
                 name, status = line.strip().split('\t')
                 st.write(f"{name} - {status}")
+                file_selection.append(name)
+            
+            # Allow user to select files to remove
+            file_to_remove = st.multiselect("Select files to remove from the database:", file_selection)
+            
+            if st.button("Remove Selected Files"):
+                with st.spinner("Removing selected files..."):
+                    for file_name in file_to_remove:
+                        st.write(f"Removing {file_name}...")
+                        # Delete the file from the RAG
+                        rag.delete_by_entity(file_name)
+                        
+                        # Update uploaded_files.txt
+                        with open(uploaded_files_path, "r", encoding="utf-8") as f:
+                            lines = f.readlines()
+                        with open(uploaded_files_path, "w", encoding="utf-8") as f:
+                            for line in lines:
+                                if not line.startswith(file_name):
+                                    f.write(line)
+                    
+                    st.success("Selected files removed successfully.")
         else:
             st.write("No files uploaded yet.")
 
-        
-            
+
+                       
 
     def run(self):
         if self.page == "Main Page":
