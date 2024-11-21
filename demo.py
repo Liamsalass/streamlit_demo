@@ -61,6 +61,12 @@ class StreamlitDemo:
             st.write("Your name is", st.session_state.name)
         
         self.user_name = st.session_state.name
+
+        st.write("## TODO:")
+        st.write("1. Add larger context window to RAG")
+        st.write("2. Allow for deletion of individual files from RAG DB")
+        st.write("3. Visualize GraphRAG and relations")
+        st.write("4. Add voice output and input")
         
 
         if st.checkbox('Show demo'):
